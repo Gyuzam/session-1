@@ -7,7 +7,7 @@ import java.util.Properties;
 public class HomeTask implements PropertyHelper{
 
     private String[] args;
-    private String path;
+    private Properties props;
 
     @Override
     public String stringValue(String name) {
@@ -33,19 +33,9 @@ public class HomeTask implements PropertyHelper{
         }
 
         // Файл
-        if (path != null) {
-            Properties props = new Properties();
-            try{
-                FileInputStream inputStream = new FileInputStream(path);
-                props.load(inputStream);
-            }
-            catch (IOException ex) {
-                System.out.println(ex.getMessage());
-            }
-            property = props.getProperty(name);
-            if (property != null){
-                return property;
-            }
+        property = props.getProperty(name);
+        if (property != null) {
+            return property;
         }
 
         return null;
@@ -79,7 +69,16 @@ public class HomeTask implements PropertyHelper{
 
     HomeTask(String[] args, String path) {
         this.args = args;
-        this.path = path;
+        if (path != null) {
+            this.props = new Properties();
+            try{
+                FileInputStream inputStream = new FileInputStream(path);
+                props.load(inputStream);
+            }
+            catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
     }
 
     public static void main(String[] args) {
@@ -89,7 +88,6 @@ public class HomeTask implements PropertyHelper{
         System.out.println(ht.stringValue("num"));
 
         Integer intn = ht.integerValue("num");
-
         if (intn != null) {
             System.out.println(intn);
         }
